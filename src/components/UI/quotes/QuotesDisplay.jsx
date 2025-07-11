@@ -24,7 +24,7 @@ const QuotesDisplay = () => {
     return (
       <p
         className={clsx(
-          "text-center",
+          "text-center text-sm sm:text-base",
           isLight ? "text-gray-500" : "text-gray-300"
         )}
       >
@@ -35,11 +35,11 @@ const QuotesDisplay = () => {
 
   if (isError) {
     return (
-      <div className="text-center text-red-500">
-        <p>Failed to load quote.</p>
+      <div className="text-center text-red-500 px-4">
+        <p className="text-sm sm:text-base">Failed to load quote.</p>
         <p
           className={clsx(
-            "text-sm",
+            "text-xs sm:text-sm mt-1",
             isLight ? "text-gray-500" : "text-gray-400"
           )}
         >
@@ -52,7 +52,7 @@ const QuotesDisplay = () => {
   return (
     <div
       className={clsx(
-        "p-6 mt-8 rounded-2xl shadow-lg max-w-2xl mx-auto transition duration-300 ease-in-out",
+        "px-4 sm:px-6 py-4 sm:py-6 mt-6 sm:mt-8 rounded-2xl shadow-lg max-w-2xl mx-auto transition duration-300 ease-in-out",
         isLight
           ? "bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100"
           : "bg-gradient-to-r from-gray-800 via-gray-700 to-gray-600"
@@ -60,7 +60,7 @@ const QuotesDisplay = () => {
     >
       <blockquote
         className={clsx(
-          "text-xl italic",
+          "lg:text-xl sm:text-md italic",
           isLight ? "text-gray-800" : "text-white"
         )}
       >
@@ -68,7 +68,7 @@ const QuotesDisplay = () => {
       </blockquote>
       <p
         className={clsx(
-          "mt-4 text-right text-lg font-semibold",
+          "mt-4 text-right text-base sm:text-lg font-semibold",
           isLight ? "text-gray-700" : "text-gray-300"
         )}
       >

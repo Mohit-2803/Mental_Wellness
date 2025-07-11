@@ -6,6 +6,9 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import JournalPage from "./pages/JournalPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ChartsPage from "./pages/ChartsPage";
+import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +22,18 @@ const router = createBrowserRouter([
       {
         path: "/journal",
         element: <JournalPage />,
+      },
+      {
+        path: "/charts",
+        element: <ChartsPage />,
+      },
+      {
+        path: "/about",
+        element: <AboutPage />,
+      },
+      {
+        path: "/contact",
+        element: <ContactPage />,
       },
     ],
   },

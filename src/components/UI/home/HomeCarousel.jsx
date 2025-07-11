@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import journalImg from "../../../assets/carousel/journel.jpg";
 import moodImg from "../../../assets/carousel/wallpaperflare.com_wallpaper.jpg";
 import quotesImg from "../../../assets/carousel/qoutes.jpg";
+import { Link } from "react-router-dom";
 
 const slides = [
   {
@@ -53,16 +54,21 @@ export const HomeCarousel = () => {
 
       {/* Text Content */}
       <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center text-center px-4 z-20">
-        <h2 className="text-4xl md:text-5xl font-bold text-white drop-shadow-md">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-md">
           {slide.title}
         </h2>
-        <p className="mt-4 text-lg md:text-xl text-gray-200 max-w-2xl drop-shadow-sm">
+        <p className="mt-4 text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl drop-shadow-sm">
           {slide.desc}
         </p>
+        <Link to="/journal">
+          <button className="mt-8 px-4 sm:px-6 py-2 sm:py-3 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition cursor-pointer text-sm sm:text-base">
+            Go to journal
+          </button>
+        </Link>
       </div>
 
       {/* Controls */}
-      <div className="absolute inset-y-1/2 left-6 z-30 transform -translate-y-1/2">
+      <div className="absolute inset-y-1/2 left-4 sm:left-6 md:left-8 z-30 transform -translate-y-1/2">
         <button
           onClick={prevSlide}
           className="p-3 bg-white/20 hover:bg-white/30 dark:bg-white/10 rounded-full transition"
@@ -70,7 +76,7 @@ export const HomeCarousel = () => {
           <ChevronLeft className="text-white" size={28} />
         </button>
       </div>
-      <div className="absolute inset-y-1/2 right-6 z-30 transform -translate-y-1/2">
+      <div className="absolute inset-y-1/2 right-4 sm:right-6 md:right-8 z-30 transform -translate-y-1/2">
         <button
           onClick={nextSlide}
           className="p-3 bg-white/20 hover:bg-white/30 dark:bg-white/10 rounded-full transition"

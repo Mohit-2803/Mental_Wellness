@@ -1,30 +1,61 @@
-// src/components/UI/journal/JournalSidebar.jsx
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CalendarDays, FileText } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import clsx from "clsx";
+import {
+  deleteJournal,
+  updateJournal,
+} from "../../../features/journal/journal_slice";
+import JournalEntryModal from "../journal/JournalEntryModal.jsx";
+
+const INITIAL_ENTRIES_TO_SHOW = 5;
 
 const JournalSidebar = () => {
-  // Local state for which date is selected, and for filtering
+  const dispatch = useDispatch();
   const [selectedDate, setSelectedDate] = useState("");
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const [modalEntry, setModalEntry] = useState(null);
 
-  // Pull current theme and journal entries from Redux
+  useEffect(() => {
+    const delay = setTimeout(() => setDebouncedSearch(search), 700);
+    return () => clearTimeout(delay);
+  }, [search]);
+
   const theme = useSelector((state) => state.theme.theme);
   const isDark = theme === "dark";
+  const allEntries = useSelector((state) => state.journal.journal);
 
-  const entries = useSelector((state) => state.journal.journal);
-  // entries is an array of { id, entry, mood, note, createdAt, tags }
+  const sortedEntries = [...allEntries].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
 
-  // Apply search filter (on entry text or date string)
-  const filteredEntries = entries.filter((e) => {
-    const dateStr = e.createdAt.slice(0, 10);
-    return (
-      e.entry.toLowerCase().includes(search.toLowerCase()) ||
-      dateStr.includes(search)
+  let entriesToDisplay = sortedEntries;
+  if (selectedDate) {
+    entriesToDisplay = sortedEntries.filter(
+      (e) => new Date(e.createdAt).toISOString().slice(0, 10) === selectedDate
     );
-  });
+  } else if (debouncedSearch) {
+    entriesToDisplay = sortedEntries.filter((e) => {
+      const dateStr = e.createdAt;
+      return (
+        e.entry.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        dateStr.includes(debouncedSearch)
+      );
+    });
+  } else {
+    entriesToDisplay = sortedEntries.slice(0, INITIAL_ENTRIES_TO_SHOW);
+  }
+
+  const handleDelete = (id) => {
+    dispatch(deleteJournal(id));
+    setModalEntry(null);
+  };
+
+  const handleUpdate = (updated) => {
+    dispatch(updateJournal(updated));
+    setModalEntry(updated);
+  };
 
   return (
     <div
@@ -41,9 +72,12 @@ const JournalSidebar = () => {
       <input
         type="date"
         value={selectedDate}
-        onChange={(e) => setSelectedDate(e.target.value)}
+        onChange={(e) => {
+          setSelectedDate(e.target.value);
+          setSearch("");
+        }}
         className={clsx(
-          "w-full mb-4 px-3 py-2 rounded-md border",
+          "w-full mb-4 px-3 py-2 rounded-md border focus:outline-orange-500",
           isDark
             ? "bg-gray-600 border-gray-500 text-gray-100"
             : "bg-gray-100 border-gray-300 text-gray-800"
@@ -53,11 +87,14 @@ const JournalSidebar = () => {
       {/* Search field */}
       <input
         type="text"
-        placeholder="Search by text or date"
+        placeholder="Search all entries..."
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => {
+          setSearch(e.target.value);
+          setSelectedDate("");
+        }}
         className={clsx(
-          "w-full mb-4 px-3 py-2 rounded-md border",
+          "w-full mb-4 px-3 py-2 rounded-md border focus:outline-orange-500",
           isDark
             ? "bg-gray-600 border-gray-500 text-gray-100"
             : "bg-gray-100 border-gray-300 text-gray-800"
@@ -66,15 +103,17 @@ const JournalSidebar = () => {
 
       {/* Entries list */}
       <div className="overflow-y-auto flex-1 pr-2">
-        {filteredEntries.length > 0 ? (
-          filteredEntries.map((entry) => {
-            const entryDate = entry.createdAt.slice(0, 10);
-            const isActive = selectedDate === entryDate;
+        {entriesToDisplay.length > 0 ? (
+          entriesToDisplay.map((entry) => {
+            const entryDateOnly = new Date(entry.createdAt)
+              .toISOString()
+              .slice(0, 10);
+            const isActive = selectedDate === entryDateOnly;
 
             return (
               <div
                 key={entry.id}
-                onClick={() => setSelectedDate(entryDate)}
+                onClick={() => setModalEntry(entry)}
                 className={clsx(
                   "p-3 mb-2 rounded-md cursor-pointer transition-shadow",
                   isDark
@@ -93,9 +132,8 @@ const JournalSidebar = () => {
                       isDark ? "text-orange-300" : "text-orange-500"
                     )}
                   />
-                  {entry.entry.length > 20
-                    ? entry.entry.substring(0, 100) + "…"
-                    : entry.entry}
+                  {entry.entry.substring(0, 100)}
+                  {entry.entry.length > 100 && "…"}
                 </p>
                 <p className="text-sm text-gray-500 mt-1">
                   {new Date(entry.createdAt).toLocaleDateString()}
@@ -107,6 +145,17 @@ const JournalSidebar = () => {
           <p className="text-sm text-center text-gray-500">No entries found.</p>
         )}
       </div>
+
+      {/* Modal */}
+      {modalEntry && (
+        <JournalEntryModal
+          entry={modalEntry}
+          onClose={() => setModalEntry(null)}
+          onDelete={handleDelete}
+          onUpdate={handleUpdate}
+          isDark={isDark}
+        />
+      )}
     </div>
   );
 };

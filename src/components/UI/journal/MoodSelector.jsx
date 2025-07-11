@@ -17,11 +17,9 @@ const MoodSelector = () => {
   const [note, setNote] = useState("");
 
   const theme = useSelector((state) => state.theme.theme);
-  const mood = useSelector((state) => state.mood.mood);
   const isDark = theme === "dark";
   const dispatch = useDispatch();
 
-  // Whenever both selectedMood and note are non-empty, dispatch
   useEffect(() => {
     if (selectedMood && note.trim() !== "") {
       dispatch(setMood({ mood: selectedMood, note }));
@@ -29,42 +27,53 @@ const MoodSelector = () => {
   }, [dispatch, selectedMood, note]);
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center lg:px-4 sm:px-0">
       <div className="max-w-xl w-full text-center">
-        <h2 className="text-2xl font-semibold mb-3">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">
           How are you feeling today?
         </h2>
 
-        <div className="flex justify-center flex-wrap gap-4 mb-4">
+        <div className="flex justify-center flex-wrap gap-3 sm:gap-4 mb-4">
           {moods.map((m) => (
             <button
               key={m.id}
               onClick={() => setSelectedMood(m.id)}
               className={clsx(
-                "flex flex-col items-center justify-center w-16 h-16 rounded-full border-2 transition cursor-pointer hover:scale-105 hover:border-orange-600",
+                "flex flex-col items-center justify-center w-10 h-10 sm:w-16 sm:h-16 rounded-full border-2 transition cursor-pointer hover:scale-105 hover:border-orange-600",
                 selectedMood === m.id
                   ? "bg-orange-500 text-white border-orange-600"
-                  : "bg-white text-gray-700 border-orange-500 hover:text-orange-500"
+                  : isDark
+                  ? "bg-gray-700 border-gray-600 text-white"
+                  : "bg-white border-gray-300 text-gray-700"
               )}
             >
-              {m.icon}
-              <span className="text-xs font-semibold mt-1">{m.label}</span>
+              <div className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6">
+                {m.icon}
+              </div>
+              <span className="hidden sm:inline text-xs font-semibold mt-1">
+                {m.label}
+              </span>
             </button>
           ))}
         </div>
 
         {selectedMood && (
-          <div className="mt-2 text-left">
-            <label className="block mb-1 text-sm font-medium text-gray-300">
-              Write a quick note !
+          <div className="mt-3 text-left">
+            <label
+              className={clsx(
+                "block mb-1 text-sm font-medium",
+                isDark ? "text-gray-300" : "text-gray-700"
+              )}
+            >
+              Write a quick note!
             </label>
             <textarea
-              rows="2"
+              rows="3"
               className={clsx(
-                "w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-orange-400 resize-none",
+                "w-full px-3 py-2 text-sm rounded-md border border-gray-300 focus:outline-orange-400 resize-none",
                 isDark
-                  ? "bg-gray-700 text-gray-100 placeholder:text-gray-200"
-                  : "bg-white text-gray-800"
+                  ? "bg-gray-700 text-gray-100 placeholder:text-gray-400"
+                  : "bg-white text-gray-800 placeholder:text-gray-500"
               )}
               placeholder="I'm feeling this way because..."
               value={note}

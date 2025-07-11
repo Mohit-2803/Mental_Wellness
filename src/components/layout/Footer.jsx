@@ -7,8 +7,8 @@ const Footer = () => {
   return (
     <footer className={`py-8 ${isLight ? "bg-gray-300" : "bg-gray-900"}`}>
       <div className="container mx-auto px-4">
-        <div className="flex flex-wrap justify-between mb-8">
-          <div className="w-full lg:w-1/3 xl:w-1/4 mb-4 lg:mb-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div>
             <h6
               className={`text-lg font-bold mb-2 ${
                 isLight ? "text-gray-600" : "text-white"
@@ -21,7 +21,7 @@ const Footer = () => {
             </p>
           </div>
 
-          <div className="w-full lg:w-1/3 xl:w-1/4 mb-4 lg:mb-0">
+          <div>
             <h6
               className={`text-lg font-bold mb-2 ${
                 isLight ? "text-gray-600" : "text-white"
@@ -47,7 +47,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="w-full lg:w-1/3 xl:w-1/4 mb-4 lg:mb-0">
+          <div>
             <h6
               className={`text-lg font-bold mb-2 ${
                 isLight ? "text-gray-600" : "text-white"
@@ -74,7 +74,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="w-full lg:w-1/3 xl:w-1/4 mb-4 lg:mb-0">
+          <div>
             <h6
               className={`text-lg font-bold mb-2 ${
                 isLight ? "text-gray-600" : "text-white"
@@ -89,7 +89,7 @@ const Footer = () => {
               <input
                 type="email"
                 placeholder="Your email address"
-                className={`w-full py-2 pl-3 text-sm font-bold mt-5 mb-5 outline-orange-300 ${
+                className={`w-full py-2 pl-3 font-bold mt-5 mb-5 outline-orange-300 ${
                   isLight
                     ? "bg-white text-gray-700"
                     : "bg-gray-800 text-white placeholder-gray-400"
@@ -97,7 +97,7 @@ const Footer = () => {
               />
               <button
                 type="submit"
-                className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+                className="w-full sm:w-auto bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
               >
                 Subscribe
               </button>
